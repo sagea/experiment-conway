@@ -8,7 +8,7 @@ export class App extends LitElement {
       store: Object
     }
   }
-	constructor() {
+    constructor() {
     super()
   }
   firstUpdated() {
@@ -19,14 +19,14 @@ export class App extends LitElement {
       storeStateMemory(this.store.getState())
     })
   }
-	render() {
+    render() {
     const { store } = this
     const { playing, speed, table, zoom, translate } = store.getState()  
     const pauseOrStart = () => {
-    	store.actions.setPlaying(!playing)
+        store.actions.setPlaying(!playing)
     }
     const handleSpeedRangeChange = (e) => {
-    	store.actions.setSpeed(parseInt(e.target.value))
+        store.actions.setSpeed(parseInt(e.target.value))
     }
     const setTranslate = ({ x, y }) => {
       store.actions.setTranslate({ x, y })
@@ -79,7 +79,7 @@ export class App extends LitElement {
       </as-conway-renderer>
       <div class="awesome">
         <h1>Conway Game of Life</h1>
-      	<label>Speed (${speed})</label>
+          <label>Speed (${speed})</label>
         <br>
         <input type="range" min="30" max="1000" .value=${speed} @input=${handleSpeedRangeChange} />
         <br>

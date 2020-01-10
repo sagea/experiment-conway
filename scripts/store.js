@@ -39,14 +39,14 @@ export const store = createStore({
   },
   
   setPlaying(state, value) {
-  	return {
+      return {
       ...state,
       playing: value,
     }
   },
   setSpeed(state, speed) {
-  	return {
-    	...state,
+      return {
+        ...state,
       speed,
     }
   },

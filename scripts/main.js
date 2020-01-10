@@ -14,11 +14,11 @@ render(
 
 let lastConwayTime = 0
 const animate = (time) => {
-	const { playing, speed } = store.getState()
+    const { playing, speed } = store.getState()
   if (playing && (time - lastConwayTime) > speed) {
-  	lastConwayTime = time
+      lastConwayTime = time
     store.actions.conwayFrameLite()
   } 
-	requestAnimationFrame(animate)
+    requestAnimationFrame(animate)
 }
 animate()

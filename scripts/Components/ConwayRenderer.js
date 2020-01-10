@@ -2,8 +2,8 @@ import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-elemen
 import { getAllActive, parse } from '../utils/table.js'
 
 export class ConwayRenderer  extends LitElement {
-	static get properties() {
-  	return {
+    static get properties() {
+      return {
       table: Object,
       cellSize: Number,
       translate: Object,
@@ -14,7 +14,7 @@ export class ConwayRenderer  extends LitElement {
       height: Number,
     }
   }
-	constructor() {
+    constructor() {
     super()
     this.canvas = document.createElement('canvas')
     this.ctx = this.canvas.getContext('2d')
@@ -86,8 +86,8 @@ export class ConwayRenderer  extends LitElement {
         right: 0;
       }
     </style>
-   	<div class="container">
-    	${this.canvas}
+       <div class="container">
+        ${this.canvas}
     </div>
    `
   }
