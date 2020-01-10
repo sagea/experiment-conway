@@ -14,11 +14,11 @@ export class TableForm extends LitElement {
     this.cell = 30
   }
 	render() {
-  	const { row, cell, onChange } = this;
+  	const { row, cell, onChange } = this
   	const handleSubmit = (e) => {
-    	e.preventDefault();
+    	e.preventDefault()
       if (typeof this.change === 'function') {
-	      this.change({ row, cell });
+	      this.change({ row, cell })
       }
     }
     const handleRowChange = (e) => {
@@ -45,4 +45,4 @@ export class TableForm extends LitElement {
   }
 }
 
-customElements.define('as-table-form', TableForm);
+customElements.define('as-table-form', TableForm)

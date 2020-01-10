@@ -9,7 +9,7 @@ export class Button extends LitElement {
   }
 
   render() {
-    const f = (event) => this.click(event);
+    const handleClick = (event) => this.click(event)
     return html`
       <style>
         button {
@@ -21,11 +21,11 @@ export class Button extends LitElement {
           background-color: #06bdcb;
         }
       </style>
-      <button type="button" @click=${f}>
+      <button type="button" @click=${handleClick}>
         <slot></slot>
       </button>
     `
   }
 }
 
-customElements.define('as-button', Button);
+customElements.define('as-button', Button)

@@ -14,7 +14,7 @@ const defaultState = {
 
 
 export const store = createStore({
-  randomizetable(state, { width, height, x=0, y=0, randomChance=.5 }) {
+  randomizeTable(state, { width, height, x=0, y=0, randomChance=.5 }) {
     let table = {}
     for (let cx = 0; cx < width; cx++) {
       for (let cy = 0; cy < height; cy++) {

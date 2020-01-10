@@ -24,9 +24,9 @@ export class ConwayRenderer  extends LitElement {
       const mousemove = (e) => {
         const now = { x: e.clientX / this.zoom, y: e.clientY / this.zoom }
         const diff = { x: now.x - start.x, y: now.y - start.y }
-        const nextX = Math.floor(startTranslate.x + diff.x);
-        const nextY = Math.floor(startTranslate.y + diff.y);
-        this.setTranslate({ x: nextX, y: nextY });
+        const nextX = Math.floor(startTranslate.x + diff.x)
+        const nextY = Math.floor(startTranslate.y + diff.y)
+        this.setTranslate({ x: nextX, y: nextY })
       }
       const mouseup = () => {
         window.removeEventListener('mousemove', mousemove)
@@ -36,9 +36,9 @@ export class ConwayRenderer  extends LitElement {
       window.addEventListener('mouseup', mouseup)
     })
     this.canvas.addEventListener('wheel', e => {
-      e.preventDefault();
-      const change = e.deltaY / 10;
-      this.setZoom(this.zoom + change);
+      e.preventDefault()
+      const change = e.deltaY / 10
+      this.setZoom(this.zoom + change)
     })
     const setSize = () => {
       this.width = window.innerWidth
@@ -56,7 +56,7 @@ export class ConwayRenderer  extends LitElement {
     ctx.save()
     ctx.fillStyle = 'rgb(18, 18, 18)'
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-    ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+    ctx.translate(this.canvas.width / 2, this.canvas.height / 2)
     ctx.save()
     ctx.scale(this.zoom, this.zoom)
 
@@ -71,7 +71,7 @@ export class ConwayRenderer  extends LitElement {
     ctx.beginPath()
     ctx.fillStyle = 'rgba(68,82,209)'
     for (let [x, y] of getAllActive(table).map(i => parse(i))) {
-      ctx.rect(x, y, 1, 1);
+      ctx.rect(x, y, 1, 1)
     }
     ctx.fill()
   }
@@ -92,4 +92,4 @@ export class ConwayRenderer  extends LitElement {
    `
   }
 }
-customElements.define('as-conway-renderer', ConwayRenderer);
+customElements.define('as-conway-renderer', ConwayRenderer)

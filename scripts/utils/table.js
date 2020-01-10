@@ -1,5 +1,5 @@
 export function parse (xy) {
-  return xy.split(',').map(i => parseInt(i));
+  return xy.split(',').map(i => parseInt(i))
 }
 
 export function stringify (x, y) {
@@ -7,11 +7,11 @@ export function stringify (x, y) {
 }
 
 export function isActive(table, x, y) {
-  return table.hasOwnProperty(stringify(x, y));
+  return table.hasOwnProperty(stringify(x, y))
 }
 
 export function count(table) {
-  return Object.keys(table).length;
+  return Object.keys(table).length
 }
 
 export function getAllActive (table) {
@@ -37,7 +37,7 @@ export function neighborCoords(x, y) {
   for (let row = -1; row <= 1; row++) {
     for (let col = -1; col <= 1; col++) {
       if (row === 0 && col === 0) {
-        continue;
+        continue
       }
       neighbors.push(stringify(x + col, y + row))
     }
@@ -66,7 +66,7 @@ export function getActiveAndInactiveNeighboringCells (table) {
     for (let neighbor of neighborCoords(x, y)) {
       all.add(neighbor)
     }
-  };
+  }
   const getActiveAndInactiveNeighboringCellsMap = (cordStr) => {
     const [x, y] = parse(cordStr)
     return [[x, y], isActive(table, x, y)]
@@ -75,9 +75,9 @@ export function getActiveAndInactiveNeighboringCells (table) {
 }
 // export function neighborCount (tableL)
 export function conway (table) {
-  let newTable = {};
+  let newTable = {}
   for (let [[x, y], active] of getActiveAndInactiveNeighboringCells(table)) {
-    const neighborCount = getActiveNeighborCount(table, x, y);
+    const neighborCount = getActiveNeighborCount(table, x, y)
     if (active && neighborCount < 2) {
       // cell becomes inactive
     } else if (active && (neighborCount == 2 || neighborCount === 3)) {
@@ -88,7 +88,7 @@ export function conway (table) {
       newTable[stringify(x, y)] = true
     }
   }
-  return newTable;
+  return newTable
 }
 
 

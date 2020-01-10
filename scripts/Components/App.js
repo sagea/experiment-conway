@@ -12,19 +12,18 @@ export class App extends LitElement {
     super()
   }
   firstUpdated() {
-    let i = 0
-    const foo = whenChanged(() => {
-      this.requestUpdate();
-    });
+    const storeStateMemory = whenChanged(() => {
+      this.requestUpdate()
+    })
     this.store.subscribe(() => {
-      foo(this.store.getState());
+      storeStateMemory(this.store.getState())
     })
   }
 	render() {
-    const { store } = this;
+    const { store } = this
     const { playing, speed, table, zoom, translate } = store.getState()  
     const pauseOrStart = () => {
-    	store.actions.setPlaying(!playing);
+    	store.actions.setPlaying(!playing)
     }
     const handleSpeedRangeChange = (e) => {
     	store.actions.setSpeed(parseInt(e.target.value))
@@ -39,7 +38,7 @@ export class App extends LitElement {
       const width = 200
       const height = 200
 
-      store.actions.randomizetable({
+      store.actions.randomizeTable({
         width,
         height,
         x: - width / 2,
@@ -92,13 +91,13 @@ export class App extends LitElement {
           <br>
           translate y: ${translate.y}
           <br>
-          zoom y: ${zoom}
+          zoom: ${zoom}
           <br>
           Live Cells: ${count(table)}
         </div>
       </div>
-    `;
+    `
   }
 }
 
-customElements.define('as-app', App);
+customElements.define('as-app', App)
