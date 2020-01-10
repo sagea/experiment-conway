@@ -27,7 +27,7 @@ export class TableForm extends LitElement {
     const handleCellChange = (e) => {
     	this.cell = parseInt(e.target.value)
     }
-  	return html `
+    return html `
     	<form novalidate @submit=${handleSubmit}>
       	<div>
         	<label>Row Size (${row})</label>

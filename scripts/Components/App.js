@@ -1,4 +1,6 @@
 import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+import { whenChanged } from '../utils/memory.js'
+import { count } from '../utils/table.js'
 
 export class App extends LitElement {
   static get properties () {
@@ -10,41 +12,92 @@ export class App extends LitElement {
     super()
   }
   firstUpdated() {
+    let i = 0
+    const foo = whenChanged(() => {
+      this.requestUpdate();
+    });
     this.store.subscribe(() => {
-    	this.requestUpdate();
+      foo(this.store.getState());
     })
   }
 	render() {
     const { store } = this;
-    const { table, tableSize, playing, cellSize, speed } = store.getState()  
+    const { playing, speed, table, zoom, translate } = store.getState()  
     const pauseOrStart = () => {
     	store.actions.setPlaying(!playing);
-    }
-    const reset = () => {
-      store.actions.randomizeTable();
     }
     const handleSpeedRangeChange = (e) => {
     	store.actions.setSpeed(parseInt(e.target.value))
     }
-    const handleTableChange = ({row, cell}) => {
-    	store.actions.setTableDimensions({ row, cell })
+    const setTranslate = ({ x, y }) => {
+      store.actions.setTranslate({ x, y })
     }
-  	return html `
+    const setZoom = (zoom) => {
+      store.actions.setZoom(zoom)
+    }
+    const populateRandomly = () => {
+      const width = 200
+      const height = 200
+
+      store.actions.randomizetable({
+        width,
+        height,
+        x: - width / 2,
+        y: - height / 2,
+        randomChance: .3
+      })
+    }
+    const reset = () => {
+      store.actions.setZoom(5)
+      store.actions.setTranslate({ x: 0, y: 0 })
+    }
+    return html `
+      <style>
+        * {
+          font-family: Courier;
+          font-size: 10px;
+        }
+        .awesome {
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: #252525;
+          padding: 10px;
+          color: #9e9e9e;
+        }
+        .stats {
+          color: #9e9e9e;
+          
+        }
+      </style>
       <h3> Conway Game of Life </h3>
       <as-conway-renderer
         .table=${table}
-        .cellSize=${cellSize}
-        .tableSize=${tableSize}>
+        .translate=${translate}
+        .zoom=${zoom}
+        .setTranslate=${setTranslate}
+        .setZoom=${setZoom}>
       </as-conway-renderer>
-      <button type="button" @click=${pauseOrStart}>${playing ? 'Stop' : 'Start'}</button>
-      <button type="button" @click=${reset}>Populate Randomly</button>
-      <div>
+      <div class="awesome">
+        <h1>Conway Game of Life</h1>
       	<label>Speed (${speed})</label>
         <br>
-	      <input type="range" min="30" max="1000" .value=${speed} @input=${handleSpeedRangeChange} />
+        <input type="range" min="30" max="1000" .value=${speed} @input=${handleSpeedRangeChange} />
+        <br>
+        <as-button .click=${pauseOrStart}>${playing ? 'Stop' : 'Start'}</as-button>
+        <as-button .click=${populateRandomly}>Populate Randomly</as-button>
+        <as-button .click=${reset}>Reset</as-button>
+        <div class="stats">
+          translate x: ${translate.x}
+          <br>
+          translate y: ${translate.y}
+          <br>
+          zoom y: ${zoom}
+          <br>
+          Live Cells: ${count(table)}
+        </div>
       </div>
-      <as-table-form .change=${handleTableChange}></as-table-form>
-    `
+    `;
   }
 }
 
