@@ -8,7 +8,7 @@ export class App extends LitElement {
       store: Object
     }
   }
-    constructor() {
+  constructor() {
     super()
   }
   firstUpdated() {
@@ -19,7 +19,7 @@ export class App extends LitElement {
       storeStateMemory(this.store.getState())
     })
   }
-    render() {
+  render() {
     const { store } = this
     const { playing, speed, table, zoom, translate } = store.getState()  
     const pauseOrStart = () => {

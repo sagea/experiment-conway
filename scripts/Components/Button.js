@@ -1,15 +1,18 @@
-import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+import {
+  html,
+  LitElement,
+} from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
 import { whenChanged } from '../utils/memory.js'
 
 export class Button extends LitElement {
-  get properties () {
+  get properties() {
     return {
-      click: Function
+      click: Function,
     }
   }
 
   render() {
-    const handleClick = (event) => this.click(event)
+    const handleClick = event => this.click(event)
     return html`
       <style>
         button {

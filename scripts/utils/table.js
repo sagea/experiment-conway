@@ -1,8 +1,8 @@
-export function parse (xy) {
+export function parse(xy) {
   return xy.split(',').map(i => parseInt(i))
 }
 
-export function stringify (x, y) {
+export function stringify(x, y) {
   return `${x},${y}`
 }
 
@@ -14,17 +14,17 @@ export function count(table) {
   return Object.keys(table).length
 }
 
-export function getAllActive (table) {
+export function getAllActive(table) {
   return Object.keys(table)
 }
 export function activate(table, x, y) {
   return {
     ...table,
-    [stringify(x, y)]: true
+    [stringify(x, y)]: true,
   }
 }
 export function deactivate(table, x, y) {
-  const clone = {...table}
+  const clone = { ...table }
   delete clone[stringify(x, y)]
   return clone
 }
@@ -45,7 +45,7 @@ export function neighborCoords(x, y) {
   return neighbors
 }
 
-export function getActiveNeighborCount (table, x, y) {
+export function getActiveNeighborCount(table, x, y) {
   let activeNeighborCount = 0
   for (let row = -1; row <= 1; row++) {
     for (let col = -1; col <= 1; col++) {
@@ -59,7 +59,7 @@ export function getActiveNeighborCount (table, x, y) {
   }
   return activeNeighborCount
 }
-export function getActiveAndInactiveNeighboringCells (table) {
+export function getActiveAndInactiveNeighboringCells(table) {
   const active = getAllActive(table)
   const all = new Set(active)
   for (let [x, y] of active.map(pos => parse(pos))) {
@@ -67,14 +67,14 @@ export function getActiveAndInactiveNeighboringCells (table) {
       all.add(neighbor)
     }
   }
-  const getActiveAndInactiveNeighboringCellsMap = (cordStr) => {
+  const getActiveAndInactiveNeighboringCellsMap = cordStr => {
     const [x, y] = parse(cordStr)
     return [[x, y], isActive(table, x, y)]
   }
   return [...all].map(getActiveAndInactiveNeighboringCellsMap)
 }
 // export function neighborCount (tableL)
-export function conway (table) {
+export function conway(table) {
   let newTable = {}
   for (let [[x, y], active] of getActiveAndInactiveNeighboringCells(table)) {
     const neighborCount = getActiveNeighborCount(table, x, y)
@@ -90,5 +90,3 @@ export function conway (table) {
   }
   return newTable
 }
-
-

@@ -1,9 +1,12 @@
-import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+import {
+  html,
+  LitElement,
+} from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
 import { getAllActive, parse } from '../utils/table.js'
 
-export class ConwayRenderer  extends LitElement {
-    static get properties() {
-      return {
+export class ConwayRenderer extends LitElement {
+  static get properties() {
+    return {
       table: Object,
       cellSize: Number,
       translate: Object,
@@ -14,14 +17,14 @@ export class ConwayRenderer  extends LitElement {
       height: Number,
     }
   }
-    constructor() {
+  constructor() {
     super()
     this.canvas = document.createElement('canvas')
     this.ctx = this.canvas.getContext('2d')
-    this.canvas.addEventListener('mousedown', (e) => {
+    this.canvas.addEventListener('mousedown', e => {
       const startTranslate = { ...this.translate }
       const start = { x: e.clientX / this.zoom, y: e.clientY / this.zoom }
-      const mousemove = (e) => {
+      const mousemove = e => {
         const now = { x: e.clientX / this.zoom, y: e.clientY / this.zoom }
         const diff = { x: now.x - start.x, y: now.y - start.y }
         const nextX = Math.floor(startTranslate.x + diff.x)
@@ -47,7 +50,7 @@ export class ConwayRenderer  extends LitElement {
     window.addEventListener('resize', setSize)
     setSize()
   }
-  updated () {
+  updated() {
     const { ctx, width, height } = this
     if (this.canvas.width !== width || this.canvas.height !== height) {
       this.canvas.width = width
@@ -64,9 +67,8 @@ export class ConwayRenderer  extends LitElement {
     this.drawCells()
     ctx.restore()
     ctx.restore()
-
   }
-  drawCells () {
+  drawCells() {
     const { ctx, table } = this
     ctx.beginPath()
     ctx.fillStyle = 'rgba(68,82,209)'
@@ -75,21 +77,21 @@ export class ConwayRenderer  extends LitElement {
     }
     ctx.fill()
   }
-  render () {
-   return html`
-    <style>
-      .container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-      }
-    </style>
-       <div class="container">
+  render() {
+    return html`
+      <style>
+        .container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+        }
+      </style>
+      <div class="container">
         ${this.canvas}
-    </div>
-   `
+      </div>
+    `
   }
 }
 customElements.define('as-conway-renderer', ConwayRenderer)
