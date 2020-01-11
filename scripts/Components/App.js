@@ -1,6 +1,7 @@
 import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
 import { whenChanged } from '../utils/memory.js'
 import { count } from '../utils/table.js'
+import { randomize } from '../workers/conway/conway.js'
 
 export class App extends LitElement {
   static get properties () {
@@ -34,17 +35,24 @@ export class App extends LitElement {
     const setZoom = (zoom) => {
       store.actions.setZoom(zoom)
     }
-    const populateRandomly = () => {
+    const populateRandomly = async () => {
       const width = 200
       const height = 200
-
-      store.actions.randomizeTable({
+      const random = await randomize({
         width,
         height,
         x: - width / 2,
         y: - height / 2,
         randomChance: .3
       })
+      store.actions.setTable({ table: random });
+      // store.actions.randomizeTable({
+      //   width,
+      //   height,
+      //   x: - width / 2,
+      //   y: - height / 2,
+      //   randomChance: .3
+      // })
     }
     const reset = () => {
       store.actions.setZoom(5)

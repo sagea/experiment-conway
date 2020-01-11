@@ -13,6 +13,12 @@ const defaultState = {
 
 export const store = createStore(
   {
+    setTable(state, { table }) {
+      return {
+        ...state,
+        table,
+      }
+    },
     randomizeTable(state, { width, height, x = 0, y = 0, randomChance = 0.5 }) {
       let table = {}
       for (let cx = 0; cx < width; cx++) {
