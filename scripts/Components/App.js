@@ -36,23 +36,16 @@ export class App extends LitElement {
       store.actions.setZoom(zoom)
     }
     const populateRandomly = async () => {
-      const width = 200
-      const height = 200
-      const random = await randomize({
+      const width = 300
+      const height = 300
+      const table = await randomize({
         width,
         height,
         x: - width / 2,
         y: - height / 2,
-        randomChance: .3
+        randomChance: 1
       })
-      store.actions.setTable({ table: random });
-      // store.actions.randomizeTable({
-      //   width,
-      //   height,
-      //   x: - width / 2,
-      //   y: - height / 2,
-      //   randomChance: .3
-      // })
+      store.actions.setTable({ table })
     }
     const reset = () => {
       store.actions.setZoom(5)

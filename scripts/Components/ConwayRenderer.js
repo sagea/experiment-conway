@@ -7,7 +7,7 @@ import { getAllActive, parse } from '../utils/table.js'
 export class ConwayRenderer extends LitElement {
   static get properties() {
     return {
-      table: Object,
+      table: Int16Array,
       cellSize: Number,
       translate: Object,
       zoom: Number,
@@ -72,9 +72,12 @@ export class ConwayRenderer extends LitElement {
     const { ctx, table } = this
     ctx.beginPath()
     ctx.fillStyle = 'rgba(68,82,209)'
-    for (let [x, y] of getAllActive(table).map(i => parse(i))) {
-      ctx.rect(x, y, 1, 1)
-    }
+    for (let i = 0; i < table.length; i += 2) {
+      ctx.rect(table[i], table[i + 1], 1, 1)
+    } 
+    // for (let [x, y] of getAllActive(table).map(i => parse(i))) {
+    //   ctx.rect(x, y, 1, 1)
+    // }
     ctx.fill()
   }
   render() {

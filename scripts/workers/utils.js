@@ -7,6 +7,11 @@ function uuid() {
       return v.toString(16);
   });
 }
+const transfers = new WeakMap()
+export const TransferObjects = (value, transferrableObjects) => {
+  transfers.set(value, transferrableObjects)
+  return value
+}
 
 export const workerMethodCreator = workerContext => method => {
   workerContext.addEventListener(
@@ -14,7 +19,8 @@ export const workerMethodCreator = workerContext => method => {
     ({ data: { event, arguments: args, id } }) => {
       if (event === method.name) {
         Promise.resolve(method(...args)).then(returnValue => {
-          workerContext.postMessage({ event: method.name, id, returnValue })
+          const transferrableObjects = transfers.get(returnValue) || []
+          workerContext.postMessage({ event: method.name, id, returnValue }, transferrableObjects)
         })
       }
     },
@@ -25,29 +31,28 @@ export const workerMethodCaller = worker => (
   methodName,
   transferArgs = false,
 ) => {
-  return {
-    [methodName]: (...args) => {
-      // todo: handle thrown errors inside a worker by rejecting
-      return new Promise(resolve => {
-        const callId = uuid()
-        const call = ({ data: { event, id, returnValue } }) => {
-          // nit: the event === methodName shouldn't matter since the uuid should be unique. But I am adding it just in case.
-          if (id === callId && event === methodName) {
-            resolve(returnValue)
-            worker.removeEventListener('message', call)
-          }
+  return (...args) => {
+    // todo: handle thrown errors inside a worker by rejecting
+    return new Promise(resolve => {
+      const callId = uuid()
+      const call = ({ data: { event, id, returnValue } }) => {
+        // nit: the event === methodName shouldn't matter since the uuid should be unique. But I am adding it just in case.
+        if (id === callId && event === methodName) {
+          resolve(returnValue)
+          worker.removeEventListener('message', call)
         }
-        worker.addEventListener('message', call)
-        worker.postMessage(
-          {
-            event: methodName,
-            arguments: args,
-            id: callId,
-          },
-          transferArgs ? args : [],
-        )
-      })
-    }
+      }
+      worker.addEventListener('message', call)
+      worker.postMessage(
+        {
+          type: 'method',
+          event: methodName,
+          arguments: args,
+          id: callId,
+        },
+        transferArgs ? args : [],
+      )
+    })
   }
 }
 
@@ -62,9 +67,9 @@ export const workerMethodCaller2 = worker => () => {
         // todo: handle thrown errors inside a worker by rejecting
         return new Promise(resolve => {
           const callId = uuid()
-          const call = ({ data: { event, id, returnValue } }) => {
+          const call = ({ data: { type, event, id, returnValue } }) => {
             // nit: the event === methodName shouldn't matter since the uuid should be unique. But I am adding it just in case.
-            if (id === callId && event === methodName) {
+            if (type === 'method' && id === callId && event === methodName) {
               resolve(returnValue)
               worker.removeEventListener('message', call)
             }
@@ -72,6 +77,7 @@ export const workerMethodCaller2 = worker => () => {
           worker.addEventListener('message', call)
           worker.postMessage(
             {
+              type: 'method',
               event: methodName,
               arguments: args,
               id: callId,
@@ -85,3 +91,22 @@ export const workerMethodCaller2 = worker => () => {
     }
   })
 }
+
+export const workerEventListener = (worker) => (eventName) => (callback) => {
+  const method = ({data: {type, event, data }}) => {
+    if (type === 'event' && eventName === event) {
+      callback(data)
+    }
+  }
+  worker.addEventListener('message', method)
+  return () => worker.removeEventListener('message', method)
+}
+export const workerEventCreator = (workerContext) => 
+  (eventName, transferArgs = false) => 
+    (eventData, transferrableObjects=[]) => {
+      workerContext.postMessage({
+        type: 'event',
+        event: eventName,
+        data: eventData
+      }, transferArgs ? transferrableObjects : [])
+    }

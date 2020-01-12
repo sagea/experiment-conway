@@ -90,3 +90,19 @@ export function conway(table) {
   }
   return newTable
 }
+
+export function shouldSurvive(active, neighborCount) {
+  if (active && neighborCount < 2) {
+    // cell becomes inactive
+    return false
+  } else if (active && (neighborCount == 2 || neighborCount === 3)) {
+    // cell becomes active
+    return true
+  } else if (active && neighborCount > 3) {
+    // cell becomes inactive
+    return false
+  } else if (!active && neighborCount === 3) {
+    // cell becomes active
+    return true
+  }
+}
