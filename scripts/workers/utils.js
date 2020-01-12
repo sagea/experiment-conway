@@ -13,14 +13,23 @@ export const TransferObjects = (value, transferrableObjects) => {
   return value
 }
 
-export const workerMethodCreator = workerContext => method => {
+export const workerMethodCreator = workerContext => (methodNameOrMethod, maybeMethod) => {
+  let method;
+  let methodName;
+  if (typeof methodNameOrMethod === 'string') {
+    method = maybeMethod
+    methodName = methodNameOrMethod
+  } else {
+    method = methodNameOrMethod
+    methodName = methodNameOrMethod.name
+  }
   workerContext.addEventListener(
     'message',
     ({ data: { event, arguments: args, id } }) => {
-      if (event === method.name) {
+      if (event === methodName) {
         Promise.resolve(method(...args)).then(returnValue => {
           const transferrableObjects = transfers.get(returnValue) || []
-          workerContext.postMessage({ event: method.name, id, returnValue }, transferrableObjects)
+          workerContext.postMessage({ event: methodName, id, returnValue }, transferrableObjects)
         })
       }
     },

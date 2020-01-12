@@ -22,7 +22,7 @@ export class App extends LitElement {
   }
   render() {
     const { store } = this
-    const { playing, speed, table, zoom, translate } = store.getState()  
+    const { playing, speed, table, zoom, translate, randomForm: { variation, size } } = store.getState()  
     const pauseOrStart = () => {
         store.actions.setPlaying(!playing)
     }
@@ -36,16 +36,41 @@ export class App extends LitElement {
       store.actions.setZoom(zoom)
     }
     const populateRandomly = async () => {
-      const width = 300
-      const height = 300
+      const width = size
+      const height = size
       const table = await randomize({
         width,
         height,
         x: - width / 2,
         y: - height / 2,
-        randomChance: 1
+        randomChance: variation
       })
       store.actions.setTable({ table })
+    }
+    const setSize = (e) => {
+      const value = e.target.value
+      if (/^[0-9]*$/.test(value)) {
+        if (!value) {
+          e.target.value = 0
+        }
+        store.actions.setRandomFormSize( value ? parseInt(value): 0)
+        return
+      }
+      const start = e.target.selectionStart
+      e.target.value = size + ''
+      e.target.selectionStart = e.target.selectionEnd = Math.max(0, start - 1)
+    }
+    const limitSizeOnBlur = e => {
+      const value = Math.min(parseInt(e.target.value.trim()), 400)
+      store.actions.setRandomFormSize(value);
+    }
+    const validatesizeInput = (e) => {
+      if (window.isNaN(parseInt(e.target.value))) {
+        e.preventDefault()
+      }
+    }
+    const setVariation = e => {
+      store.actions.setRandomFormVariation(parseFloat(e.target.value))
     }
     const reset = () => {
       store.actions.setZoom(5)
@@ -69,6 +94,10 @@ export class App extends LitElement {
           color: #9e9e9e;
           
         }
+        hr {
+          border: none;
+          border-bottom: 1px solid #9e9e9e;
+        }
       </style>
       <h3> Conway Game of Life </h3>
       <as-conway-renderer
@@ -84,9 +113,23 @@ export class App extends LitElement {
         <br>
         <input type="range" min="30" max="1000" .value=${speed} @input=${handleSpeedRangeChange} />
         <br>
+        
         <as-button .click=${pauseOrStart}>${playing ? 'Stop' : 'Start'}</as-button>
         <as-button .click=${populateRandomly}>Populate Randomly</as-button>
         <as-button .click=${reset}>Reset</as-button>
+        <hr>
+        <h3>Generator</h3>
+        <div>
+          <label>Variation ${Math.floor(variation * 100)}%</label>
+          <br>
+          <input type="range" min="0" max="1" step=".01" .value=${variation} @input=${setVariation} />
+        </div>
+        <div>
+          <label>Variation ${Math.floor(variation * 100)}%</label>
+          <br>
+          <input type="text" .value=${size} @input=${setSize} @beforeinput=${validatesizeInput} @blur=${limitSizeOnBlur} />
+        </div>
+        <hr>
         <div class="stats">
           translate x: ${translate.x}
           <br>
@@ -94,8 +137,10 @@ export class App extends LitElement {
           <br>
           zoom: ${zoom}
           <br>
-          Live Cells: ${count(table)}
+          Live Cells: ${table.length}
         </div>
+
+
       </div>
     `
   }

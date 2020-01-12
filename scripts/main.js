@@ -1,11 +1,11 @@
 import './Components/App.js'
 import './Components/ConwayRenderer.js'
 import './Components/Button.js'
+import './Components/ConwayCanvas/ConwayCanvas.js'
 import { html } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
 import { render } from 'https://unpkg.com/lit-html@1.1.2/lit-html.js?module'
 import { store } from './store.js'
 import { conway } from './workers/conway/conway.js'
-import { stringify } from './utils/table.js'
 
 render(
   html`

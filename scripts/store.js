@@ -3,12 +3,16 @@ import { activate, conway, stringify } from './utils/table.js'
 
 const defaultState = {
   activeTool: 'move',
-  table: {},
+  table: new Int16Array(),
   changes: [],
   playing: false,
   zoom: 5,
   translate: { x: 0, y: 0 },
   speed: 30,
+  randomForm: {
+    variation: .3,
+    size: 300,
+  }
 }
 
 export const store = createStore(
@@ -82,6 +86,30 @@ export const store = createStore(
         tool,
       }
     },
+    setRandomFormVariation(state, variation) {
+      if (state.randomForm.variation === variation) {
+        return state
+      }
+      return {
+        ...state,
+        randomForm: {
+          ...state.randomForm,
+          variation,
+        }
+      }
+    },
+    setRandomFormSize(state, size) {
+      if (state.randomForm.size === size) {
+        return state
+      }
+      return {
+        ...state,
+        randomForm: {
+          ...state.randomForm,
+          size,
+        }
+      }
+    }
   },
   defaultState,
 )

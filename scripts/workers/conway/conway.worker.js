@@ -5,8 +5,6 @@ import { TableMap } from './tableWithMaps.js'
 const exporter = workerMethodCreator(self)
 const eventCreator = workerEventCreator(self)
 
-const sendTableUpdateEvent = eventCreator('TableUpdated', true)
-
 const defaultState = {
   table: {},
 }
@@ -14,7 +12,6 @@ const defaultState = {
 const store = createStore({
   randomize(state, { width, height, x = 0, y = 0, randomChance = 0.5 }) {
     const table = new TableMap()
-    // let table = {}
     for (let cx = 0; cx < width; cx++) {
       for (let cy = 0; cy < height; cy++) {
         if (Math.random() <= randomChance) {
@@ -37,10 +34,6 @@ const store = createStore({
   }
 }, defaultState)
 
-// store.subscribe(() => {
-//   const buffer = store.getState().table.buffer
-//   sendTableUpdateEvent(buffer, [buffer])
-// })
 exporter(async function randomize({ width, height, x, y, randomChance }) {
   store.actions.randomize({ width, height, x, y, randomChance })
   return store.getState().table.buffer
