@@ -25,7 +25,7 @@ const makeCoordListFromTable = (table) => {
 const sortCordList = (list) => {
   const newList = []
   for (let i = 0; i < list.length; i += 2) {
-    newList.push([list[i], list[i + 1]]);
+    newList.push([list[i], list[i + 1]])
   }
   return newList.sort(([ax, ay], [bx, by]) => {
     if (ax === bx) return ay - by

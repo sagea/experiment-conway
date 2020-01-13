@@ -10,7 +10,7 @@ const defaultState = {
   speed: 30,
   randomForm: {
     variation: .3,
-    size: 400,
+    size: 300,
   }
 }
 

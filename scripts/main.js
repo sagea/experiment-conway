@@ -14,7 +14,7 @@ render(
   document.body,
 )
 
-let lastConwayTime = 0;
+let lastConwayTime = 0
 const animate = async time => {
   const { playing, speed } = store.getState()
   if (playing && time - lastConwayTime > speed) {

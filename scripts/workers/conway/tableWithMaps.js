@@ -4,15 +4,15 @@
 self.TableMap = (() => {
   class TableMap {
     constructor(arrayBuffer) {
-      this.xMap = new Map();
-      this.list = [];
+      this.xMap = new Map()
+      this.list = []
     }
     clone() {
-      const map = new TableMap();
+      const map = new TableMap()
       for (let [x, y] of this.list) {
-        map.set(x, y);
+        map.set(x, y)
       }
-      return map;
+      return map
     }
     set(x, y, value = true) {
       if (this.has(x, y)) {
@@ -22,13 +22,13 @@ self.TableMap = (() => {
         x,
         (this.xMap.get(x) || new Map()).set(y, value)
       )
-      this.list.push(x, y);
+      this.list.push(x, y)
     }
     has(x, y) {
-      return this.xMap.has(x) && this.xMap.get(x).has(y);
+      return this.xMap.has(x) && this.xMap.get(x).has(y)
     }
     isActive(x, y) {
-      return (this.xMap.has(x) && this.xMap.get(x).get(y)) || false;
+      return (this.xMap.has(x) && this.xMap.get(x).get(y)) || false
     }
     getAll() {
       let table = new TableMap()
@@ -39,11 +39,11 @@ self.TableMap = (() => {
           for (let col = -1; col <= 1; col++) {
             let ax = x + col
             let ay = y + row
-            table.set(ax, ay, this.isActive(ax, ay) || false);
+            table.set(ax, ay, this.isActive(ax, ay) || false)
           }
         }
       }
-      return table;
+      return table
     }
     getActiveNeighborCount(x, y) {
       let count = 0
@@ -100,5 +100,4 @@ self.TableMap = (() => {
   return {
     TableMap
   }
-}) ();
-
+}) ()

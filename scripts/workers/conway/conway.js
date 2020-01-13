@@ -1,6 +1,6 @@
 
 import { workerMethodCaller } from '../utils.js'
-const worker = new Worker('./scripts/workers/conway/conway.worker.js');
+const worker = new Worker('./scripts/workers/conway/conway.worker.js')
 const createCaller = workerMethodCaller(worker)
 
 export const randomizeCaller = createCaller('randomize')
@@ -15,4 +15,3 @@ export const conway = async () => {
   const buffer = await conwayCaller()
   return processTableBuffer(buffer)
 }
-// export const tableUpdatedEvent = createListener('TableUpdated')

@@ -8,8 +8,8 @@ self.WorkerUtils = (() => {
   }
   
   const workerMethodCreator = workerContext => (methodNameOrMethod, maybeMethod) => {
-    let method;
-    let methodName;
+    let method
+    let methodName
     if (typeof methodNameOrMethod === 'string') {
       method = maybeMethod
       methodName = methodNameOrMethod

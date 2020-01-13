@@ -20,7 +20,7 @@ export class ConwayCanvas extends LitElement {
     super()
     this.canvas = document.createElement('canvas')
     this.offscreenCanvas = this.canvas.transferControlToOffscreen()
-    const worker = new Worker('./scripts/Components/ConwayCanvas/ConwayCanvas.worker.js');
+    const worker = new Worker('./scripts/Components/ConwayCanvas/ConwayCanvas.worker.js')
     const createCaller = workerMethodCaller(worker)
     this.setActions = {
       zoom: createCaller('setZoom'),
@@ -59,7 +59,7 @@ export class ConwayCanvas extends LitElement {
   }
   firstUpdated() {
     this.shouldUpdateAgain = false
-    this.setActions.windowSize({ width: this.width, height: this.height });
+    this.setActions.windowSize({ width: this.width, height: this.height })
     this.setActions.canvas(this.offscreenCanvas)
   }
   render () {

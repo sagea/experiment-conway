@@ -61,7 +61,7 @@ export class App extends LitElement {
     }
     const limitSizeOnBlur = e => {
       const value = Math.min(parseInt(e.target.value.trim()), 400)
-      store.actions.setRandomFormSize(value);
+      store.actions.setRandomFormSize(value)
     }
     const validatesizeInput = (e) => {
       if (window.isNaN(parseInt(e.target.value))) {

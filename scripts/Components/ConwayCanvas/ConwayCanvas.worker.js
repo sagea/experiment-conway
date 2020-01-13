@@ -35,7 +35,7 @@ const defaultState = {
 const store = createStore({
   setZoom(state, zoom) {
     if (state.zoom === zoom) {
-      return state;
+      return state
     }
     return {
       ...state,
@@ -85,7 +85,7 @@ const store = createStore({
       renderPaused: paused,
     }
   }
-}, defaultState);
+}, defaultState)
 
 const whenChanged = memory()
 store.subscribe(() => {
@@ -97,8 +97,8 @@ store.subscribe(() => {
     }
     if (canvas) {
       whenChanged(window, () => {
-        canvas.width = window.width;
-        canvas.height = window.height;
+        canvas.width = window.width
+        canvas.height = window.height
       })
       ctx.save()
       {
