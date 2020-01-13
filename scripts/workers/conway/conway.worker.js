@@ -15,11 +15,11 @@ const defaultState = {
 }
 
 const store = createStore({
-  randomize(state, { width, height, x = 0, y = 0, randomChance = 0.5 }) {
+  randomize(state, { width, height, x = 0, y = 0, variation = 0.5 }) {
     const table = new TableMap()
     for (let cx = 0; cx < width; cx++) {
       for (let cy = 0; cy < height; cy++) {
-        if (Math.random() <= randomChance) {
+        if (Math.random() <= variation) {
           const ax = cx + x
           const ay = cy + y
           table.set(ax, ay)
@@ -39,8 +39,8 @@ const store = createStore({
   }
 }, defaultState)
 
-exporter(async function randomize({ width, height, x, y, randomChance }) {
-  store.actions.randomize({ width, height, x, y, randomChance })
+exporter(async function randomize({ width, height, x, y, variation }) {
+  store.actions.randomize({ width, height, x, y, variation })
   return store.getState().table.buffer
 })
 
