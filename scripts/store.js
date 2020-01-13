@@ -1,5 +1,4 @@
 import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2/es/statestorelit.mjs?module'
-import { activate, conway, stringify } from './utils/table.js'
 
 const defaultState = {
   activeTool: 'move',
@@ -11,7 +10,7 @@ const defaultState = {
   speed: 30,
   randomForm: {
     variation: .3,
-    size: 300,
+    size: 400,
   }
 }
 
@@ -23,30 +22,6 @@ export const store = createStore(
         table,
       }
     },
-    randomizeTable(state, { width, height, x = 0, y = 0, randomChance = 0.5 }) {
-      let table = {}
-      for (let cx = 0; cx < width; cx++) {
-        for (let cy = 0; cy < height; cy++) {
-          if (Math.random() <= randomChance) {
-            const ax = cx + x
-            const ay = cy + y
-            table[stringify(ax, ay)] = true
-          }
-        }
-      }
-      return {
-        ...state,
-        table,
-      }
-    },
-
-    conwayFrameLite(state) {
-      return {
-        ...state,
-        table: conway(state.table),
-      }
-    },
-
     setPlaying(state, value) {
       return {
         ...state,

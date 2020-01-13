@@ -1,6 +1,24 @@
-import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2/es/statestorelit.mjs?module'
-import { workerMethodCreator } from '../../workers/utils.js'
-import { memory } from '../../utils/memory.js'
+importScripts(
+  'https://unpkg.com/state-store-lite@1.0.2',
+  '../../workers/utils.worker.js',
+  '../../workers/conway/tableWithMaps.js'
+)
+
+const { createStore } = self.statestorelit
+const { workerMethodCreator } = self.WorkerUtils
+
+// import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2/es/statestorelit.mjs?module'
+// import { workerMethodCreator } from '../../workers/utils.js'
+
+function memory () {
+  const set = new WeakSet()
+  return (value, callback) => {
+    if (!set.has(value)) {
+      set.add(value)
+      callback(value)
+    }
+  }
+}
 
 const defaultState = {
   zoom: 2,

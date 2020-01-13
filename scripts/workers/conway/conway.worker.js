@@ -1,9 +1,14 @@
-import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2/es/statestorelit.mjs?module'
-import { conway, stringify } from '../../utils/table.js'
-import { workerMethodCreator, workerEventCreator, TransferObjects } from '../utils.js'
-import { TableMap } from './tableWithMaps.js'
+importScripts(
+  'https://unpkg.com/state-store-lite@1.0.2',
+  '../utils.worker.js',
+  './tableWithMaps.js'
+)
+
+const { createStore } = self.statestorelit
+const { workerMethodCreator, TransferObjects } = self.WorkerUtils
+const { TableMap } = self.TableMap
+
 const exporter = workerMethodCreator(self)
-const eventCreator = workerEventCreator(self)
 
 const defaultState = {
   table: {},
@@ -29,7 +34,7 @@ const store = createStore({
   fireConway(state) {
     return {
       ...state,
-      table: state.table.conway()// conway(state.table),
+      table: state.table.conway()
     }
   }
 }, defaultState)

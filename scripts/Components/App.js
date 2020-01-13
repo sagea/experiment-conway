@@ -1,6 +1,5 @@
 import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
 import { whenChanged } from '../utils/memory.js'
-import { count } from '../utils/table.js'
 import { randomize } from '../workers/conway/conway.js'
 
 export class App extends LitElement {

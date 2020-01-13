@@ -2,7 +2,6 @@ import {
   html,
   LitElement,
 } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
-import { getAllActive, parse } from '../utils/table.js'
 
 export class ConwayRenderer extends LitElement {
   static get properties() {
