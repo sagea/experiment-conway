@@ -5,9 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Conway Experiment</title>
-  <!-- <base href="/"> -->
+  <style>
+    body {
+      background-color: black;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
+  <link rel="stylesheet" defer href="https://unpkg.com/@fortawesome/fontawesome-free@5.12.0/css/all.min.css" />
+  <!-- <script src="./scripts/vendors/AssemblyScriptLoader.js" type="text/javascript"></script> -->
+  <script type="ffff">
+    import { load } from './experiments/assemblyscript/index.js'
+    const init = async () => {
+      const stuff = await load()
+      console.log('stuff', stuff)
+      // const instance = new Test()
+      stuff.set(1, 2, true)
+      stuff.set(3, 4, false)
+      stuff.set(5, 6, true)
+      const foo = stuff.__collect(stuff.conway())
+      debugger;
+
+      console.log('foo', foo)
+      // setInterval(() => {
+      //   console.log('get', instance.get(1, 2))
+      // }, 300)
+    }
+    init();
+    // load()
+    //   .then(() => {
+
+    //   })
+    // setInterval(() => {
+    //   console.log(set(3, 4, true))
+    //   console.log(get(3, 4))
+    // }, 300)
+  </script>
   <script type="module">
     import './scripts/main.js'
   </script>

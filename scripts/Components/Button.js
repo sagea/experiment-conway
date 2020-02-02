@@ -1,7 +1,7 @@
 import {
   html,
   LitElement,
-} from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+} from 'https://unpkg.com/lit-element@2.2.1?module'
 import { whenChanged } from '../utils/memory.js'
 
 export class Button extends LitElement {

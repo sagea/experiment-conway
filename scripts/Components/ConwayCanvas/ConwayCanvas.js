@@ -1,7 +1,7 @@
 import {
   html,
   LitElement,
-} from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+} from 'https://unpkg.com/lit-element@2.2.1?module'
 import { workerMethodCaller } from '../../workers/utils.js'
 
 export class ConwayCanvas extends LitElement {
@@ -20,7 +20,7 @@ export class ConwayCanvas extends LitElement {
     super()
     this.canvas = document.createElement('canvas')
     this.offscreenCanvas = this.canvas.transferControlToOffscreen()
-    const worker = new Worker('./scripts/Components/ConwayCanvas/ConwayCanvas.worker.js')
+    const worker = new Worker('./scripts/Components/ConwayCanvas/ConwayCanvas.worker.js', { type: 'module' })
     const createCaller = workerMethodCaller(worker)
     this.setActions = {
       zoom: createCaller('setZoom'),

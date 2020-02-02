@@ -1,7 +1,7 @@
 import {
   html,
   LitElement,
-} from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+} from 'https://unpkg.com/lit-element@2.2.1?module'
 
 export class ConwayRenderer extends LitElement {
   static get properties() {
@@ -12,8 +12,10 @@ export class ConwayRenderer extends LitElement {
       zoom: Number,
       setZoom: Function,
       setTranslate: Function,
+      onDrag: Function,
       width: Number,
       height: Number,
+      tool: String,
     }
   }
   constructor() {
@@ -31,14 +33,30 @@ export class ConwayRenderer extends LitElement {
   }
   handleMouseDown(e) {
     e.preventDefault()
+    const calculate = ({ clientX: x, clientY: y}) => {
+      const { width, height, zoom} = this;
+      const cw = width / 2
+      const ch = height / 2
+      return {
+        x: (x - cw) / zoom,
+        y: (y - ch) / zoom,
+      }
+    }
     const startTranslate = { ...this.translate }
-    const start = { x: e.clientX / this.zoom, y: e.clientY / this.zoom }
+    const start = calculate(e);
+    let last = start
     const mousemove = e => {
-      const now = { x: e.clientX / this.zoom, y: e.clientY / this.zoom }
+      const { translate } = this
+      const now = calculate(e)
       const diff = { x: now.x - start.x, y: now.y - start.y }
       const nextX = Math.floor(startTranslate.x + diff.x)
       const nextY = Math.floor(startTranslate.y + diff.y)
-      this.setTranslate({ x: nextX, y: nextY })
+      this.onDrag({
+        now: { x: now.x - translate.x, y: now.y - translate.y},
+        last: { x: last.x - translate.x, y: last.y - translate.y },
+        cellPos: { x: nextX, y: nextY },
+      })
+      last = now
     }
     const mouseup = () => {
       window.removeEventListener('mousemove', mousemove)
