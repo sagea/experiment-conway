@@ -1,5 +1,3 @@
-// self.WorkerUtils = (() => {
-
 const transfers = new WeakMap()
 
 export const TransferObjects = (value, transferrableObjects) => {
@@ -29,9 +27,3 @@ export const workerMethodCreator = workerContext => (methodNameOrMethod, maybeMe
     },
   )
 }
-  
-//   return {
-//     TransferObjects,
-//     workerMethodCreator
-//   }
-// })()
