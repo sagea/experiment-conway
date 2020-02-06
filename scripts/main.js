@@ -22,9 +22,7 @@ const animate = async time => {
   const { playing, speed, randomForm: { variation, size }} = store.getState()
   if (playing && time - lastConwayTime > speed) {
     lastConwayTime = time
-    console.time('animate () => await conway()')
     const table = await conway()
-    console.timeEnd('animate () => await conway()')
     store.actions.setTable({ table })
   }
   requestAnimationFrame(animate)

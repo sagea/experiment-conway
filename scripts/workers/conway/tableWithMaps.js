@@ -122,7 +122,6 @@ export class TableMap {
     return new Int16Array(this.list).buffer
   }
   *[Symbol.iterator]() {
-    console.trace('TableMap *[Symbol.iterator]')
     for (let [x, yMap] of this.xMap) {
       for (let [y, active] of yMap) {
         yield [x, y, active]
