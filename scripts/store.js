@@ -1,7 +1,7 @@
 import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2/es/statestorelit.mjs?module'
 
 const defaultState = {
-  activeTool: 'move',
+  tool: 'CANVAS_DRAG',
   table: new Int16Array(),
   changes: [],
   playing: false,
@@ -9,8 +9,8 @@ const defaultState = {
   translate: { x: 0, y: 0 },
   speed: 30,
   randomForm: {
-    variation: .3,
-    size: 300,
+    variation: 1,
+    size: 71,
   }
 }
 
@@ -35,7 +35,7 @@ export const store = createStore(
       }
     },
     setZoom(state, zoom) {
-      const zoomLimit = Math.min(Math.max(zoom, 2), 20)
+      const zoomLimit = Math.min(Math.max(zoom, 0.2), 20)
       const newZoom = Math.floor(zoomLimit * 10) / 10
 
       if (newZoom === state.zoom) {

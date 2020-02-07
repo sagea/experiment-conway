@@ -1,14 +1,5 @@
-importScripts(
-  'https://unpkg.com/state-store-lite@1.0.2',
-  '../../workers/utils.worker.js',
-  '../../workers/conway/tableWithMaps.js'
-)
-
-const { createStore } = self.statestorelit
-const { workerMethodCreator } = self.WorkerUtils
-
-// import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2/es/statestorelit.mjs?module'
-// import { workerMethodCreator } from '../../workers/utils.js'
+import { createStore } from 'https://unpkg.com/state-store-lite@1.0.2?module';
+import { workerMethodCreator } from '../../workers/utils.worker.js';
 
 function memory () {
   const set = new WeakSet()
@@ -100,9 +91,19 @@ store.subscribe(() => {
         canvas.width = window.width
         canvas.height = window.height
       })
+      const { width, height } = window
       ctx.save()
+      const hw = (width / 2) / zoom
+      const hh = (height / 2) / zoom
+      let viewableBox = {
+        x1: -hw - translate.x - zoom,
+        y1: -hh - translate.y - zoom,
+        x2: hw - translate.x + zoom,
+        y2: hh - translate.y + zoom,
+      }
+
+      
       {
-        const { width, height } = window
         ctx.fillStyle = 'rgb(18, 18, 18)'
         ctx.fillRect(0, 0, width, height)
         ctx.translate(width / 2, height / 2)
@@ -115,7 +116,13 @@ store.subscribe(() => {
             ctx.beginPath()
             ctx.fillStyle = 'rgba(68,82,209)'
             for (let i = 0; i < table.length; i += 2) {
-              ctx.rect(table[i], table[i + 1], 1, 1)
+              const x = table[i]
+              const y = table[i + 1]
+              if (x < viewableBox.x1) continue
+              if (x > viewableBox.x2) continue
+              if (y < viewableBox.y1) continue
+              if (y > viewableBox.y2) continue
+              ctx.rect(x, y, 1, 1)
             }
             ctx.fill()
           }

@@ -1,6 +1,9 @@
-import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1/lit-element.js?module'
+import { html, LitElement } from 'https://unpkg.com/lit-element@2.2.1?module'
+
 import { whenChanged } from '../utils/memory.js'
-import { randomize } from '../workers/conway/conway.js'
+import { randomize, enableCells, disableCells } from '../workers/conway/conway.js'
+import { Path } from '../modules/generics/Shapes.js'
+import { v, applyModifier } from '../modules/generics/Vector.js'
 
 export class App extends LitElement {
   static get properties () {
@@ -21,7 +24,7 @@ export class App extends LitElement {
   }
   render() {
     const { store } = this
-    const { playing, speed, table, zoom, translate, randomForm: { variation, size } } = store.getState()  
+    const { playing, speed, table, zoom, translate, randomForm: { variation, size }, tool } = store.getState()
     const pauseOrStart = () => {
         store.actions.setPlaying(!playing)
     }
@@ -60,7 +63,7 @@ export class App extends LitElement {
       e.target.selectionStart = e.target.selectionEnd = Math.max(0, start - 1)
     }
     const limitSizeOnBlur = e => {
-      const value = Math.min(parseInt(e.target.value.trim()), 400)
+      const value = Math.min(parseInt(e.target.value.trim()), 1500)
       store.actions.setRandomFormSize(value)
     }
     const validatesizeInput = (e) => {
@@ -74,6 +77,30 @@ export class App extends LitElement {
     const reset = () => {
       store.actions.setZoom(5)
       store.actions.setTranslate({ x: 0, y: 0 })
+    }
+    let toolHandler = () => {}
+    if (tool === 'CANVAS_DRAG') {
+      toolHandler = ({ now, cellPos }) => {
+        if (this.translate.x !== cellPos.x || this.translate.y !== cellPos.y) {
+          store.actions.setTranslate(cellPos)
+        }
+      }
+    } else if (tool === 'DRAW') {
+      toolHandler = async ({ now, last, cellPos }) => {
+        const from = applyModifier(v(last.x, last.y), Math.floor)
+        const to = applyModifier(v(now.x, now.y), Math.floor)
+        const pixels = Path(from, to, 4)
+        const table = await enableCells(new Int16Array(pixels.flat()));
+        store.actions.setTable({ table })
+      }
+    }  else if (tool === 'ERASER') {
+      toolHandler = async ({ now, last, cellPos }) => {
+        const from = applyModifier(v(last.x, last.y), Math.floor)
+        const to = applyModifier(v(now.x, now.y), Math.floor)
+        const pixels = Path(from, to, 4)
+        const table = await disableCells(new Int16Array(pixels.flat()));
+        store.actions.setTable({ table })
+      }
     }
     return html `
       <style>
@@ -104,7 +131,9 @@ export class App extends LitElement {
         .translate=${translate}
         .zoom=${zoom}
         .setTranslate=${setTranslate}
-        .setZoom=${setZoom}>
+        .onDrag=${toolHandler}
+        .setZoom=${setZoom}
+        .tool=${tool}>
       </as-conway-renderer>
       <div class="awesome">
         <h1>Conway Game of Life</h1>
@@ -114,7 +143,6 @@ export class App extends LitElement {
         <br>
         
         <as-button .click=${pauseOrStart}>${playing ? 'Stop' : 'Start'}</as-button>
-        <as-button .click=${populateRandomly}>Populate Randomly</as-button>
         <as-button .click=${reset}>Reset</as-button>
         <hr>
         <h3>Generator</h3>
@@ -124,10 +152,13 @@ export class App extends LitElement {
           <input type="range" min="0" max="1" step=".01" .value=${variation} @input=${setVariation} />
         </div>
         <div>
-          <label>Variation ${Math.floor(variation * 100)}%</label>
+          <label>Size</label>
           <br>
           <input type="text" .value=${size} @input=${setSize} @beforeinput=${validatesizeInput} @blur=${limitSizeOnBlur} />
         </div>
+        <br>
+
+        <as-button .click=${populateRandomly}>Populate Randomly</as-button>
         <hr>
         <div class="stats">
           translate x: ${translate.x}
@@ -135,11 +166,12 @@ export class App extends LitElement {
           translate y: ${translate.y}
           <br>
           zoom: ${zoom}
-          <br>
-          Live Cells: ${table.length}
+          <br>  
+          Live Cells: ${table.length / 2}
         </div>
-
-
+        <as-toolbox
+          .selected=${tool}
+          .onSelectionChange=${(tool) => store.actions.setTool(tool.new)}></as-toolbox>
       </div>
     `
   }

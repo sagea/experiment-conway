@@ -5,11 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Conway Experiment</title>
-  <!-- <base href="/"> -->
+  <style>
+    body {
+      background-color: black;
+      overflow: hidden;
+    }
+    #BrowserUnsupportedMessage {
+      display: none;
+      color: #ccc;
+    }
+    .browserSupported #BrowserUnsupportedMessage {
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <link rel="stylesheet" defer href="https://unpkg.com/@fortawesome/fontawesome-free@5.12.0/css/all.min.css" />
+  <div id="BrowserUnsupportedMessage">
+    <h1>Browser Not Supported</h1>
+    <p>This app requires browser module support for web workers</p>
+    <p>Supported Browsers as of writing: Chrome 80+</p>
+  </div>
   <script type="module">
-    import './scripts/main.js'
+    import { checkSupport } from './scripts/workers/workerModuleFeatureSupport/workerModuleFeatureSupport.js'
+    checkSupport().then((supports) => {
+        console.log('check support', supports)
+        if (supports) {
+          const script = document.createElement('script')
+          script.textContent = 'import(\'./scripts/main.js\')'
+          script.type = 'module';
+          document.body.appendChild(script);
+        } else {
+          document.body.classList.add('browserSupported')
+        }
+      })
   </script>
 </body>
 </html>

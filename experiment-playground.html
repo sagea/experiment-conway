@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Experiment Playground</title>
+</head>
+<body>
+  <script type="module">
+    {
+
+      const worker = new Worker('scripts/workers/worker-browsermodule-support/browser-module-support.worker.js', {
+        name: 'nomodule worker',
+      })
+      worker.addEventListener('message', (data) => {
+        console.log('nomodule message', data)
+      })
+      worker.addEventListener('error', (err) => {
+        console.log('nomodule error', err);
+      })
+    }
+    {
+
+    const worker = new Worker('scripts/workers/worker-browsermodule-support/browser-module-support.worker.js?module', {
+      name: 'worker module',
+      type: 'module',
+    })
+    worker.addEventListener('message', (data) => {
+      console.log('module message', data)
+    })
+    worker.addEventListener('error', (err) => {
+      console.log('module  error', err);
+    })
+    }
+  </script>
+</body>
+</html>
