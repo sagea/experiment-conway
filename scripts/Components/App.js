@@ -4,13 +4,9 @@ import { whenChanged } from '../utils/memory.js'
 import { randomize, enableCells, disableCells } from '../workers/conway/conway.js'
 import { Path } from '../modules/generics/Shapes.js'
 import { v, applyModifier } from '../modules/generics/Vector.js'
+import { store } from '../store.js'
 
 export class App extends LitElement {
-  static get properties () {
-    return {
-      store: Object
-    }
-  }
   constructor() {
     super()
   }
@@ -18,12 +14,11 @@ export class App extends LitElement {
     const storeStateMemory = whenChanged(() => {
       this.requestUpdate()
     })
-    this.store.subscribe(() => {
-      storeStateMemory(this.store.getState())
+    store.subscribe(() => {
+      storeStateMemory(store.getState())
     })
   }
   render() {
-    const { store } = this
     const { playing, speed, table, zoom, translate, randomForm: { variation, size }, tool } = store.getState()
     const pauseOrStart = () => {
         store.actions.setPlaying(!playing)
